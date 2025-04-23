@@ -148,13 +148,22 @@ function prepareResponseBody(
 
   // Blob
   if (val instanceof Blob) {
-    return {
-      body: val.stream(),
-      headers: {
-        "content-type": val.type,
-        "content-length": val.size.toString(),
-      },
-    };
+    const headers = new Headers({
+      "content-type": val.type,
+      "content-length": val.size.toString(),
+    });
+
+    // File
+    if ("name" in val) {
+      const filename = encodeURIComponent(val.name as string);
+      // Omit the disposition type ("inline" or "attachment") and let the client (browser) decide.
+      headers.set(
+        "content-disposition",
+        `filename="${filename}"; filename*=UTF-8''${filename}`,
+      );
+    }
+
+    return { body: val.stream(), headers };
   }
 
   // Symbol or Function
