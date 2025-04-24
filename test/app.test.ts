@@ -77,7 +77,7 @@ describeMatrix("app", (t, { it, expect }) => {
     expect(await res.text()).toBe("<h1>Hello World</h1>");
   });
 
-  it.only("can return File directly", async () => {
+  it("can return File directly", async () => {
     t.app.use(
       () =>
         new File(["<h1>Hello World</h1>"], "hello ❤️.html", {
