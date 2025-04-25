@@ -82,10 +82,13 @@ describeMatrix("cookies", (t, { it, expect, describe }) => {
     });
   });
 
-  it("can merge unique cookies", async () => {
+  it("can merge and deduplicate unique cookies", async () => {
     t.app.get("/", (event) => {
-      setCookie(event, "session", "123", { httpOnly: true });
-      setCookie(event, "session", "123", {
+      setCookie(event, "session", "abc", {
+        path: "/docs",
+      });
+      setCookie(event, "session", "123", { httpOnly: false });
+      setCookie(event, "session", "456", {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 30,
       });
@@ -93,7 +96,8 @@ describeMatrix("cookies", (t, { it, expect, describe }) => {
     });
     const result = await t.fetch("/");
     expect(result.headers.getSetCookie()).toEqual([
-      "session=123; Max-Age=2592000; Path=/; HttpOnly",
+      "session=abc; Path=/docs",
+      "session=456; Max-Age=2592000; Path=/; HttpOnly",
     ]);
     expect(await result.text()).toBe("200");
   });
