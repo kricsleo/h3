@@ -50,7 +50,10 @@ export async function proxyRequest(
 
   // Headers
   const fetchHeaders = mergeHeaders(
-    getProxyRequestHeaders(event, { host: target.startsWith("/") }),
+    getProxyRequestHeaders(event, {
+      host: target.startsWith("/"),
+      trustedHeaders: opts.trustedHeaders,
+    }),
     opts.fetchOptions?.headers,
     opts.headers,
   );
