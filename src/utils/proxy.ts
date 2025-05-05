@@ -13,7 +13,7 @@ import { EmptyObject } from "./internal/obj.ts";
 
 export interface ProxyOptions {
   headers?: HeadersInit;
-  trustedHeaders?: string[];
+  forwardHeaders?: string[];
   fetchOptions?: RequestInit & { duplex?: "half" | "full" } & {
     ignoreResponseError?: boolean;
   };
@@ -52,7 +52,7 @@ export async function proxyRequest(
   const fetchHeaders = mergeHeaders(
     getProxyRequestHeaders(event, {
       host: target.startsWith("/"),
-      trustedHeaders: opts.trustedHeaders,
+      forwardHeaders: opts.forwardHeaders,
     }),
     opts.fetchOptions?.headers,
     opts.headers,
@@ -153,12 +153,12 @@ export async function proxy(
  */
 export function getProxyRequestHeaders(
   event: H3Event,
-  opts?: { host?: boolean; trustedHeaders?: string[] },
+  opts?: { host?: boolean; forwardHeaders?: string[] },
 ): Record<string, string> {
   const headers = new EmptyObject();
   for (const [name, value] of event.req.headers.entries()) {
     if (
-      opts?.trustedHeaders?.includes(name) ||
+      opts?.forwardHeaders?.includes(name) ||
       !ignoredHeaders.has(name) ||
       (name === "host" && opts?.host)
     ) {
