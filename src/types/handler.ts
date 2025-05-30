@@ -1,6 +1,5 @@
 import type { H3Event } from "./event.ts";
 import type { Hooks as WSHooks } from "crossws";
-import type { HTTPMethod, WebSocketOptions } from "./h3.ts";
 import type { H3 } from "../h3.ts";
 
 export type EventHandlerResponse<T = unknown> = T | Promise<T>;
@@ -19,24 +18,25 @@ export type InferEventInput<
 
 type MaybePromise<T> = T | Promise<T>;
 
-export type ResolvedEventHandler = {
-  method?: HTTPMethod;
-  route?: string;
-  handler?: EventHandler;
-  params?: Record<string, string>;
-};
-
-export type EventHandlerResolver = (
-  method: HTTPMethod,
-  path: string,
-) => MaybePromise<undefined | ResolvedEventHandler>;
-
 export interface EventHandler<
   Request extends EventHandlerRequest = EventHandlerRequest,
   Response extends EventHandlerResponse = EventHandlerResponse,
-> extends Partial<Pick<H3, "handler" | "resolve" | "config">> {
+> extends Partial<Pick<H3, "handler" | "config">> {
   (event: H3Event<Request>): Response;
-  websocket?: WebSocketOptions;
+}
+
+export interface MiddlewareOptions {
+  route?: string;
+  method?: string;
+  match?: (event: H3Event) => boolean;
+}
+
+export interface Middleware {
+  (
+    event: H3Event,
+    next: () => MaybePromise<unknown | undefined>,
+  ): MaybePromise<unknown | undefined>;
+  match?: (event: H3Event) => boolean;
 }
 
 export type RequestMiddleware<

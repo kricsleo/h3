@@ -130,11 +130,11 @@ describeMatrix("serve static with fallthrough", (t, { it, expect }) => {
       fallthrough: true,
     } satisfies ServeStaticOptions;
 
-    t.app.use("/**", (event) => {
+    t.app.use((event) => {
       return serveStatic(event, serveStaticOptions);
     });
 
-    t.app.use("/**", (event) => {
+    t.app.use((event) => {
       if (event.path.includes("404")) {
         event.res.status = 404;
       }
