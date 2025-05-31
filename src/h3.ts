@@ -11,6 +11,7 @@ import type { ResolvedEventHandler } from "./types/handler.ts";
 import type { H3Config } from "./types/h3.ts";
 import type { H3Event, H3EventContext } from "./types/event.ts";
 import type { EventHandler, EventHandlerRequest } from "./types/handler.ts";
+import { createError } from "./error.ts";
 
 /**
  * Serve the h3 app, automatically handles current runtime behavior.
@@ -44,12 +45,24 @@ export class H3 {
 
     this.fetch = this.fetch.bind(this);
 
-    this.handler = Object.assign((event: H3Event) => this.#handler(event), <
-      Partial<EventHandler>
-    >{
-      resolve: (method: HTTPMethod, path: string) => this.resolve(method, path),
-      websocket: this.config.websocket,
-    });
+    this.handler = Object.assign(
+      (event: H3Event) => {
+        try {
+          return this.#handler(event);
+        } catch (error) {
+          if (this.config.onError && error instanceof Error) {
+            return this.config.onError(createError(error), event);
+          }
+
+          throw error;
+        }
+      },
+      <Partial<EventHandler>>{
+        resolve: (method: HTTPMethod, path: string) =>
+          this.resolve(method, path),
+        websocket: this.config.websocket,
+      },
+    );
   }
 
   /**
