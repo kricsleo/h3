@@ -334,16 +334,20 @@ describeMatrix("body", (t, { it, expect, describe }) => {
         const multipartFormData = await readMultipartFormData(event);
 
         expect(multipartFormData[0].name).toBe("baz");
-        expect(multipartFormData[0].data instanceof Buffer).toBe(true);
-        expect(multipartFormData[0].data.toString("utf8")).toBe("other");
+        expect(multipartFormData[0].data instanceof Uint8Array).toBe(true);
+        expect(new TextDecoder().decode(multipartFormData[0].data)).toBe(
+          "other",
+        );
 
         expect(multipartFormData[1].name).toBe("号楼电表数据模版.xlsx");
-        expect(multipartFormData[1].data instanceof Buffer).toBe(true);
-        expect(multipartFormData[1].data.toString("utf8")).toBe("something");
+        expect(multipartFormData[1].data instanceof Uint8Array).toBe(true);
+        expect(new TextDecoder().decode(multipartFormData[1].data)).toBe(
+          "something",
+        );
 
         return multipartFormData.map((part) => ({
           ...part,
-          data: part.data.toString("utf8"),
+          data: new TextDecoder().decode(part.data),
         }));
       });
 

@@ -99,13 +99,13 @@ export const readFormData: (event: H3Event) => Promise<FormData> =
 /** @deprecated Please use `event.req.formData()` */
 export async function readMultipartFormData(event: H3Event): Promise<
   Array<{
-    data: Buffer;
+    data: Uint8Array;
     name?: string;
     filename?: string;
     type?: string;
   }>
 > {
-  const formData = await readFormDataBody(event);
+  const formData = await event.req.formData();
 
   return Promise.all(
     [...formData.entries()].map(async ([key, value]) => {
@@ -114,10 +114,9 @@ export async function readMultipartFormData(event: H3Event): Promise<
             name: key,
             type: value.type,
             filename: value.name,
-            // Convert Blob to Buffer for backward compatibility
-            data: Buffer.from(await value.arrayBuffer()),
+            data: await value.bytes(),
           }
-        : { name: key, data: Buffer.from(value) };
+        : { name: key, data: new TextEncoder().encode(value) };
     }),
   );
 }
