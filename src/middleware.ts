@@ -70,13 +70,13 @@ export function callMiddleware(
   }
   const fn = middleware[index];
 
-  let nextCalled = false;
+  let nextCalled: undefined | boolean;
   let nextResult: unknown;
+
   const next = () => {
     if (nextCalled) {
       return nextResult;
     }
-
     nextCalled = true;
     nextResult = callMiddleware(event, middleware, handler, index + 1);
     return nextResult;
