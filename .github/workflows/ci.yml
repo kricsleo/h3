@@ -1,8 +1,8 @@
 name: ci
 
 on:
-  push: { branches: [main, v1] }
-  pull_request: { branches: [main, v1] }
+  push: { branches: [v1] }
+  pull_request: { branches: [v1] }
 
 jobs:
   tests:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions: { id-token: write, contents: read }
     needs: tests
-    if: contains('refs/heads/main', github.ref) && github.event_name == 'push'
+    if: contains('refs/heads/v1', github.ref) && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v5
         with: { fetch-depth: 0 }
