@@ -27,7 +27,8 @@
     "play": "listhen -w ./playground/app.ts",
     "profile": "0x -o -D .profile -P 'autocannon -c 100 -p 10 -d 40 http://localhost:$PORT' ./playground/server.cjs",
     "release": "pnpm test && pnpm build && changelogen --release --publish --publishTag latest && git push --follow-tags",
-    "test": "pnpm lint && vitest --run --coverage"
+    "test": "pnpm lint && vitest --run --coverage && pnpm test:types",
+    "test:types": "tsc --noEmit"
   },
   "resolutions": {
     "h3": "^1.14.0"

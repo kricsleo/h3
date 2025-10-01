@@ -233,11 +233,16 @@ export async function sealSession<T extends SessionDataT = SessionDataT>(
     (event.context.sessions?.[sessionName] as Session<T>) ||
     (await getSession<T>(event, config));
 
-  const sealed = await seal(config.crypto || crypto, session, config.password, {
-    ...sealDefaults,
-    ttl: config.maxAge ? config.maxAge * 1000 : 0,
-    ...config.seal,
-  });
+  const sealed = await seal(
+    config.crypto || (crypto as any),
+    session,
+    config.password,
+    {
+      ...sealDefaults,
+      ttl: config.maxAge ? config.maxAge * 1000 : 0,
+      ...config.seal,
+    },
+  );
 
   return sealed;
 }
@@ -251,7 +256,7 @@ export async function unsealSession(
   sealed: string,
 ) {
   const unsealed = (await unseal(
-    config.crypto || crypto,
+    config.crypto || (crypto as any),
     sealed,
     config.password,
     {
