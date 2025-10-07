@@ -27,7 +27,7 @@
     "prepack": "pnpm build",
     "play": "listhen -w ./playground/app.ts",
     "profile": "0x -o -D .profile -P 'autocannon -c 100 -p 10 -d 40 http://localhost:$PORT' ./playground/server.cjs",
-    "release": "pnpm test && pnpm build && changelogen --release --publish --publishTag latest && git push --follow-tags",
+    "release": "pnpm test && pnpm build && changelogen --release --publish --publishTag 1.x && git push --follow-tags",
     "test": "pnpm lint && vitest --run --coverage && pnpm test:types",
     "test:types": "tsc --noEmit"
   },
