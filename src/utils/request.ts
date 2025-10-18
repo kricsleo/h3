@@ -365,9 +365,10 @@ export function toWebRequest(event: H3Event) {
       get signal() {
         if (!abortSignal) {
           abortSignal = new AbortController();
-          event.node.req.once("close", () => {
-            abortSignal?.abort();
-          });
+
+          const abort = (err?: any) => abortSignal?.abort(err);
+          event.node.req.once("close", abort);
+          event.node.req.once("end", abort);
         }
         return abortSignal.signal;
       },
