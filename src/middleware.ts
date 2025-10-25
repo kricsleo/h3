@@ -83,19 +83,15 @@ export function callMiddleware(
   };
 
   const ret = fn(event, next);
-  return is404(ret)
+  return isUnhandledResponse(ret)
     ? next()
     : typeof (ret as PromiseLike<unknown>)?.then === "function"
       ? (ret as PromiseLike<unknown>).then((resolved) =>
-          is404(resolved) ? next() : resolved,
+          isUnhandledResponse(resolved) ? next() : resolved,
         )
       : ret;
 }
 
-function is404(val: unknown) {
-  return (
-    val === undefined ||
-    val === kNotFound ||
-    ((val as Response)?.status === 404 && val instanceof Response)
-  );
+function isUnhandledResponse(val: unknown) {
+  return val === undefined || val === kNotFound;
 }

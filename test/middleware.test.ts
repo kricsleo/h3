@@ -49,6 +49,15 @@ describeMatrix("middleware", (t, { it, expect }) => {
       },
     );
 
+    t.app.use(
+      "/custom-404",
+      () =>
+        new Response("Not found", {
+          status: 404,
+          statusText: "Page not found",
+        }),
+    );
+
     let count = 0;
     t.app.get(
       "/**",
@@ -127,5 +136,11 @@ describeMatrix("middleware", (t, { it, expect }) => {
     const response = await t.app.request("/test/...");
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ log: expect.any(String) });
+  });
+
+  it("return custom 404 response in middleware", async () => {
+    const result = await t.fetch("/custom-404");
+    expect(result.status).toBe(404);
+    expect(result.statusText).toBe("Page not found");
   });
 });
