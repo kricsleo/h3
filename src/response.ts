@@ -119,8 +119,8 @@ function prepareResponse(
     );
   }
 
-  // Note: Only check _headers. res.status/statusText are not used as we use them from the response
-  if (!preparedHeaders) {
+  // Avoid merging if no prepared headers are provided or we are rendering an Error
+  if (!preparedHeaders || nested || !val.ok) {
     return val; // Fast path: no headers to merge
   }
   try {
@@ -154,9 +154,22 @@ function mergeHeaders(
   return target;
 }
 
-const emptyHeaders = /* @__PURE__ */ new Headers({ "content-length": "0" });
+const frozenHeaders = () => {
+  throw new Error("Headers are frozen");
+};
 
-const jsonHeaders = /* @__PURE__ */ new Headers({
+class FrozenHeaders extends Headers {
+  constructor(init?: HeadersInit) {
+    super(init);
+    this.set = this.append = this.delete = frozenHeaders;
+  }
+}
+
+const emptyHeaders = /* @__PURE__ */ new FrozenHeaders({
+  "content-length": "0",
+});
+
+const jsonHeaders = /* @__PURE__ */ new FrozenHeaders({
   "content-type": "application/json;charset=UTF-8",
 });
 
@@ -267,7 +280,7 @@ function errorResponse(error: HTTPError, debug?: boolean): Response {
       statusText: error.statusText,
       headers: error.headers
         ? mergeHeaders(jsonHeaders, error.headers)
-        : jsonHeaders,
+        : new Headers(jsonHeaders),
     },
   );
 }

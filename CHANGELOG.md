@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.1-rc.4
+
+[compare changes](https://github.com/h3js/h3/compare/v2.0.1-rc.3...v2.0.1-rc.4)
+
+### 🚀 Enhancements
+
+- Add `assertBodySize` util and `bodyLimit` middleware ([#1222](https://github.com/h3js/h3/pull/1222))
+
+### 🩹 Fixes
+
+- Support happy-dom environment ([#1230](https://github.com/h3js/h3/pull/1230))
+
+### 🏡 Chore
+
+- Update deps ([6d8204a](https://github.com/h3js/h3/commit/6d8204a))
+
+### ❤️ Contributors
+
+- Reve ([@aquapi](https://github.com/aquapi))
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
+## v2.0.1-rc.3
+
+[compare changes](https://github.com/h3js/h3/compare/v2.0.1-rc.2...v2.0.1-rc.3)
+
+### 🩹 Fixes
+
+- Freeze default response headers ([#1227](https://github.com/h3js/h3/pull/1227))
+- **response:** Do not double merge prepared headers in nested error handler ([#1226](https://github.com/h3js/h3/pull/1226))
+- ⚠️  Avoid merging prepared headers when a `Response` is not ok ([#1228](https://github.com/h3js/h3/pull/1228))
+
+### 💅 Refactors
+
+- Update to srvx 0.9 ([#1224](https://github.com/h3js/h3/pull/1224))
+- **proxy:** ⚠️  Keep header entries as-is ([#1225](https://github.com/h3js/h3/pull/1225))
+
+### 📖 Documentation
+
+- Remove beta tag ([#1223](https://github.com/h3js/h3/pull/1223))
+
+### 📦 Build
+
+- Reduce external dependencies ([#1219](https://github.com/h3js/h3/pull/1219))
+
+### 🌊 Types
+
+- Merge custom `body` in `HTTPError.toJSON` result ([#1216](https://github.com/h3js/h3/pull/1216))
+- Fix types for legacy `defineEventHandler`, `eventHandler`, `lazyEventHandler` ([f185ce6](https://github.com/h3js/h3/commit/f185ce6))
+
+### 🏡 Chore
+
+- Update deps ([3e92a35](https://github.com/h3js/h3/commit/3e92a35))
+- Update deps ([d546f2d](https://github.com/h3js/h3/commit/d546f2d))
+- Update bench ([7632fc3](https://github.com/h3js/h3/commit/7632fc3))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Avoid merging prepared headers when a `Response` is not ok ([#1228](https://github.com/h3js/h3/pull/1228))
+- **proxy:** ⚠️  Keep header entries as-is ([#1225](https://github.com/h3js/h3/pull/1225))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+- Abeer0 ([@iiio2](https://github.com/iiio2))
+- Валентин Степанов ([@teleskop150750](https://github.com/teleskop150750))
+
 ## v2.0.1-rc.2
 
 [compare changes](https://github.com/h3js/h3/compare/v2.0.0-rc.1...v2.0.1-rc.2)
