@@ -2,6 +2,8 @@ import { beforeEach } from "vitest";
 import { describeMatrix } from "./_setup.ts";
 import { H3 } from "../src/h3.ts";
 import { defineHandler } from "../src/handler.ts";
+import { Hono } from "hono";
+import { toMiddleware } from "../src/middleware.ts";
 
 describeMatrix("middleware", (t, { it, expect }) => {
   beforeEach(() => {
@@ -142,5 +144,22 @@ describeMatrix("middleware", (t, { it, expect }) => {
     const result = await t.fetch("/custom-404");
     expect(result.status).toBe(404);
     expect(result.statusText).toBe("Page not found");
+  });
+
+  it("can mount sub-router as middleware", async () => {
+    t.app.get("/", () => "hi!");
+
+    const honoApp = new Hono().get("/hello", (c) => {
+      return c.text("world");
+    });
+    t.app.use(toMiddleware(honoApp));
+
+    const res = await t.fetch("/hello");
+    expect(res.status).toBe(200);
+    expect(await res.text()).toBe("world");
+
+    const res2 = await t.fetch("/");
+    expect(res2.status).toBe(200);
+    expect(await res2.text()).toBe("hi!");
   });
 });
